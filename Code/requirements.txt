@@ -1,0 +1,14 @@
+# Dependencies for the current PC-AEGG implementation.
+numpy
+pandas
+scipy
+shapely
+trimesh
+rtree
+matplotlib
+tqdm
+joblib
+Pillow
+python-docx
+openpyxl
+fast-simplification

@@ -1,0 +1,54 @@
+{
+  "generated_on": "2026-10-20",
+  "historical_binary_identity_claimed": false,
+  "organic_grid_basis": "archived input_carrier_geometry_audit.json: divisions [10,20,35]",
+  "water35_grid_basis": "archived surface_patch_metrics.csv: six patches, two faces per patch",
+  "files": [
+    {
+      "case": "water35",
+      "file": "Input_Geometries/box_10x10x35mm.stl",
+      "origin": "newly generated from recorded box dimensions and grid settings",
+      "extents_mm": [
+        10.0,
+        10.0,
+        35.0
+      ],
+      "grid_divisions_xyz": [
+        1,
+        1,
+        1
+      ],
+      "input_faces": 12,
+      "requested_target_faces": 1000,
+      "actual_builder_carrier_faces": 12,
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 3500.0,
+      "surface_area_mm2": 1600.0,
+      "sha256": "c7f68004a312f832eb3e5deff2261114f1c709f8020a6cc352919f168f66bfb0"
+    },
+    {
+      "case": "organic22p5",
+      "file": "Input_Geometries/box_10x10x22.5mm.stl",
+      "origin": "newly generated from recorded box dimensions and grid settings",
+      "extents_mm": [
+        10.0,
+        10.0,
+        22.5
+      ],
+      "grid_divisions_xyz": [
+        10,
+        20,
+        35
+      ],
+      "input_faces": 5000,
+      "requested_target_faces": 5000,
+      "actual_builder_carrier_faces": 5000,
+      "watertight": true,
+      "winding_consistent": true,
+      "volume_mm3": 2250.0,
+      "surface_area_mm2": 1100.0,
+      "sha256": "8c57975815f8c7ba3b9362b985547fc8013418791d194827bb554682df08df82"
+    }
+  ]
+}

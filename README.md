@@ -1,6 +1,8 @@
 # Physics-constrained graph grammar for functionally partitioned porous architectures
 
-本项目提供 PC-AEGG 的实现代码、案例配置、统计复算脚本和辅助分析程序。配套研究数据后续将上传至 Zenodo，代码通过 GitHub 私有仓库管理。数据 DOI 和代码与数据的版本对应信息将在数据归档完成后补充；公开发布由作者另行确定。
+本项目提供 PC-AEGG 的实现代码、案例配置、统计复算脚本和辅助分析程序。代码通过 GitHub 私有仓库管理，研究数据保存在 Zenodo 私有草稿中，包括生成结构、实验读数和更新后的微 CT 材料。作者通过只读审稿链接提供访问；代码和数据的公开发布由作者另行确定。
+
+Zenodo 中的 `PC_AEGG_Reviewer_Package_20261028.zip` 包含对应 GitHub 提交的代码及复算所需输入。解压后可直接按照下面的命令核对保存结果；代码提交号与文件校验值记录在包内。完整扫描、原生模型、图件和视频由其余分组压缩包提供。
 
 代码仓库：<https://github.com/LH666-hash/Physics-constrained-graph-grammar-for-functionally-partitioned-porous-architectures>
 
@@ -28,7 +30,7 @@ python -m pip install -r Code/requirements-tested.txt
 
 ## 复算论文所报统计
 
-取得配套数据后，将其数据目录合并到项目根目录，保持 `Code/` 与 `Source_Data/` 并列。统计复算使用 `Source_Data/Ablation_Analysis/` 中的归档压力剖面和 `Source_Data/ICP/` 中的工作簿。
+解压审稿核查包，或将完整数据包的数据目录合并到项目根目录，保持 `Code/` 与 `Source_Data/` 并列。统计复算使用 `Source_Data/Ablation_Analysis/` 中的归档压力剖面和 `Source_Data/ICP/` 中的工作簿。
 
 ```sh
 python Code/Analysis/recompute_archived_results.py --out ReproductionResults
@@ -46,7 +48,7 @@ python Code/Analysis/generate_case.py --case water25 --out NewRuns/water25 --dry
 
 ## 版本与文件校验
 
-论文归档结构的生成版本由对应生成记录中的源码校验值标识。当前生成源码与这些归档生成版本不同，仓库文件的 SHA-256 校验值列于 `CODE_MANIFEST.csv`。当前代码版本与后续 Zenodo 数据版本的对应关系将在数据归档时记录。
+论文归档结构的生成版本由对应生成记录中的源码校验值标识。当前生成源码与这些归档生成版本不同，仓库文件的 SHA-256 校验值列于 `CODE_MANIFEST.csv`。Zenodo 审稿核查包记录所含代码的 GitHub 提交号；数据文件的校验值列于对应数据清单。
 
 ## 回归检查
 
@@ -56,8 +58,18 @@ python Code/Analysis/generate_case.py --case water25 --out NewRuns/water25 --dry
 python -m unittest discover -s Code/Tests -p "test_generation_entrypoint.py"
 ```
 
-配置检查中涉及保存压力剖面和配对缓存的用例使用配套归档数据。放置数据后可运行完整检查：
+完整配置检查所需的压力剖面和配对缓存输入已包含在审稿核查包中；解压后可运行：
 
 ```sh
 python -m unittest discover -s Code/Tests -p "test_*.py"
 ```
+
+## 微 CT 保存结果核对
+
+审稿核查包中的 `Micro_CT/` 提供保存的分割、配准数组和定量表；完整 CT 压缩包另提供扫描、原生 STL、图件和视频。
+
+```sh
+python Code/Analysis/recompute_microct_metrics.py --ct-root Micro_CT --out ReviewChecks/microct
+```
+
+程序从保存的数组复算五个样品的实体 Dice、连续体积孔隙率和有效原始层孔隙率，并核对孔隙组分表的体素与体积总和。分割、配准和孔隙标记属于已保存的上游处理阶段。完整原生 STL 约为每个样品 1.2–1.4 GB，查看几何时可先使用同目录中的预览 STL。

@@ -2,6 +2,7 @@
 import contextlib
 import io
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -61,13 +62,15 @@ class GenerationEntrypointTests(unittest.TestCase):
             marker=out/'archived_result.json'
             marker.write_bytes(b'keep unchanged\n')
             result=subprocess.run([sys.executable,launcher,'--out-dir',str(out)],
-                                  capture_output=True,text=True)
+                                  capture_output=True,text=True,encoding='utf-8',
+                                  env={**os.environ,'PYTHONIOENCODING':'utf-8'})
             self.assertNotEqual(result.returncode,0)
             self.assertIn('FileExistsError',result.stderr)
             self.assertEqual(list(out.iterdir()),[marker])
             self.assertEqual(marker.read_bytes(),b'keep unchanged\n')
         result=subprocess.run([sys.executable,launcher,'--out-dir',str(PACKAGE/'Source_Data')],
-                              capture_output=True,text=True)
+                              capture_output=True,text=True,encoding='utf-8',
+                                  env={**os.environ,'PYTHONIOENCODING':'utf-8'})
         self.assertNotEqual(result.returncode,0)
         self.assertIn('outside archived Source_Data',result.stderr)
 

@@ -1,6 +1,6 @@
 # PC-AEGG 代码使用说明
 
-本目录提供 PC-AEGG 的核心实现、案例配置、统计复算和分析程序。代码通过 GitHub 私有仓库管理，配套研究数据后续将上传至 Zenodo。数据 DOI 和对应版本信息将在数据归档完成后补充。项目概览见[项目说明](../README.md)。以下命令在项目根目录执行。
+本目录提供 PC-AEGG 的核心实现、案例配置、统计复算和分析程序。代码通过 GitHub 私有仓库管理，配套研究数据保存在 Zenodo 私有草稿中，并通过作者提供的只读链接供审稿核查。审稿核查包记录其对应的代码提交号。项目概览见[项目说明](../README.md)。以下命令在项目根目录执行。
 
 ## 环境与依赖
 
@@ -86,10 +86,22 @@ python Code/Analysis/generate_case.py --case water25 --out NewRuns/water25 --dry
 python -m unittest discover -s Code/Tests -p "test_generation_entrypoint.py"
 ```
 
-放置配套归档数据后，可运行全部配置与入口检查：
+审稿核查包已包含配置与入口检查所需的数据，解压后可运行：
 
 ```sh
 python -m unittest discover -s Code/Tests -p "test_*.py"
 ```
 
 检查包括 25 mm 水相、22.5 mm 有机相、35 mm 水相再返回 25 mm 水相的连续切换，以及保存剖面的压力网格验收。
+
+## 微 CT 保存结果核对
+
+```sh
+python Code/Analysis/recompute_microct_metrics.py --ct-root Micro_CT --out ReviewChecks/microct
+```
+
+该入口读取五组保存的原生分割、分析区掩膜、已配准比较数组和组分表，复算实体 Dice、两种孔隙率口径并核对体素及体积汇总。输出为 `microct_recomputed_metrics.json`。核查所用文件随审稿核查包提供；完整扫描和原生 STL 保存在完整 CT 压缩包中。
+
+## 基准程序的包内输入
+
+`Benchmark/run_strong_baseline_experiment.py` 从包内 `Source_Data/Benchmark_Analysis/内部/` 读取预设结构搜索表及 PC-AEGG 参考指标，使用同目录中的 `internal_pareto_pipeline.py` 和 `Core/capillary_viscous_filling.py`。其 `--out-dir` 是新计算结果的位置。`internal_pareto_pipeline.py` 的几何、液压模块和五个参考运行目录通过命令行显式指定。归档搜索表和自然表面比较结果可直接查看。

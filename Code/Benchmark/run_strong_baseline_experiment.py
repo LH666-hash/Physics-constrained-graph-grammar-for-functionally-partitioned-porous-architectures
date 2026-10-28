@@ -16,10 +16,12 @@ from scipy import ndimage
 from scipy.stats import qmc
 
 
-ROOT = Path("E:/\u7b2c\u4e8c\u7bc7\u6587\u7ae0")
-INTERNAL_DIR = ROOT / "Figure2\u6570\u636e" / "internal_pareto"
-PIPELINE = INTERNAL_DIR / "internal_pareto_pipeline.py"
-HYDRAULIC = ROOT / "Figure4\u6570\u636e" / "plot_code" / "pore_network_viscous_compensation.py"
+ROOT = Path(__file__).resolve().parents[2]
+INTERNAL_DIR = ROOT / "Source_Data/Benchmark_Analysis/内部"
+PIPELINE = Path(__file__).with_name("internal_pareto_pipeline.py")
+HYDRAULIC = ROOT / "Code/Core/capillary_viscous_filling.py"
+CANDIDATES = INTERNAL_DIR / "01_预设内部结构_全部45220.csv"
+PC_REFERENCES = INTERNAL_DIR / "07_PC-AEGG完整组5次终态内部指标.csv"
 
 DELTA_EPSILON = 0.023
 DELTA_HEIGHT_MM = 2.25
@@ -526,8 +528,8 @@ def main() -> None:
     ip = load_module(PIPELINE, "internal_pareto_pipeline_strong_baselines")
     hydraulic = load_module(HYDRAULIC, "hydraulic_strong_baselines")
     hydraulic_function = hydraulic.apply_state_updated_viscous_profile
-    candidates = pd.read_csv(INTERNAL_DIR / "internal_pareto_candidates.csv")
-    pc = pd.read_csv(INTERNAL_DIR / "pc_aegg_reference.csv")
+    candidates = pd.read_csv(CANDIDATES,low_memory=False)
+    pc = pd.read_csv(PC_REFERENCES)
 
     matched_cores, existing_pairs = select_existing_matches(candidates, pc)
     existing_pairs.to_csv(args.out_dir / "parametric_internal_match_pairs.csv", index=False)

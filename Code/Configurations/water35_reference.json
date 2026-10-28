@@ -1,7 +1,7 @@
 {
-  "input_stl": "C:\\Users\\wbyan\\Documents\\Codex\\2026-10-16\\ni-s\\outputs\\height_limit_water\\inputs\\box_10x10x35mm.stl",
+  "input_stl": "Input_Geometries/box_10x10x35mm.stl",
   "target_height_mm": 35.0,
-  "output_dir": "C:\\Users\\wbyan\\Documents\\Codex\\2026-10-16\\ni-s\\outputs\\height_limit_water\\density_35mm\\H35_density1p5_seed101",
+  "output_dir": "NewRuns/water35",
   "build_mode": "dynamic",
   "internal_matched_random_position": false,
   "internal_matched_random_node_budget": 0,

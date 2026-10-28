@@ -3,8 +3,8 @@ from pathlib import Path
 import csv,hashlib,io,json,shutil,tempfile,zipfile
 
 ROOT=Path(__file__).resolve().parents[2]
-NAME='PC_AEGG_Reviewer_Package_20261028.zip'
-EXPECTED_SHA256='edf6d8b91ed35f8624dd0c6c44045ca3a060134fdb4fbc1b17f753541adee39e'
+NAME='PC_AEGG_Review_Inputs_20261028.zip'
+EXPECTED_SHA256='f049702b39d03f4c6298f584fe8d95acd38bb2baf937331efa286aa7e0b2a106'
 
 def digest(path):
     sha=hashlib.sha256()
@@ -41,7 +41,7 @@ def prepare():
             count+=1
     assert count>0
     result={'input_archive':NAME,'input_archive_sha256':EXPECTED_SHA256,'files_verified':count,
-            'input_snapshot_commit':'206b527387ecc851bb60fcd1e25fb989cad134ac',
+            'input_release':'2026-10-28',
             'code_files_replaced':False}
     (ROOT/'REVIEW_INPUT_VERSION.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
     print(json.dumps(result,indent=2))

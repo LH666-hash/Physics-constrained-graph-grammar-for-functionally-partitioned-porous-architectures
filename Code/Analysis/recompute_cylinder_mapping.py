@@ -85,4 +85,3 @@ Choose a new output directory. The historical full Figure3 is retained separatel
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--out',required=True)
     run(parser.parse_args().out)
-

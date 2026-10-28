@@ -24,6 +24,16 @@ Run commands from the project root. `Code/`, `Input_Geometries/`, `Source_Data/`
 | `Code/Configurations/` | Case definitions, production mapping and input provenance |
 | `Code/Tests/` | Configuration and entry-point regressions |
 
+## Prepare the Zenodo inputs automatically
+
+Download `PC_AEGG_Code_20261028.zip` and `PC_AEGG_Reviewer_Package_20261028.zip`. Extract the code archive into a project directory. Keep the review archive in that directory or its parent, then run:
+
+```sh
+python Code/Analysis/prepare_review_inputs.py
+```
+
+The script verifies the archive and extracts only its `Source_Data/` and `Micro_CT/` inputs. It preserves the current code and verifies every extracted input. Case configurations use package-relative geometry and output paths. No source-path edits are required.
+
 ## Review package and archived calculations
 
 `PC_AEGG_Reviewer_Package_20261028.zip` contains the code snapshot at commit `206b527387ecc851bb60fcd1e25fb989cad134ac` and the saved inputs needed by these commands:
@@ -38,15 +48,9 @@ The first analysis reads 20 saved pressure profiles and two ICP workbooks. The s
 
 The pressure/ICP output is `recomputed_results.json`; the CT output is `microct_recomputed_metrics.json`, within the selected output directories.
 
-## Controlled cylinder-mapping verification
+## Figure 3g source data
 
-The companion archive `PC_AEGG_Cylinder_Mapping_Verification_20261028.zip` supplies a newly calculated controlled check for radii 5, 10 and 20 mm. It contains all 120 results, test surfaces, chart arrays, parameters and the calculation script. Extract it into the same project directory and run:
-
-```sh
-python Code/Analysis/recompute_cylinder_mapping.py --out NewChecks/cylinder_mapping
-```
-
-This computation calls the deposited surface builder's chart construction and mapped area/perimeter functions. Its provenance JSON records the settings and source checksums. It is a separate controlled recomputation; the historical scatter-point coordinates displayed in Figure3g remain unchanged. The frozen review package and this companion archive therefore have distinct version records.
+The original Figure 3g workbook is supplied in `PC_AEGG_Figure3g_Source_Data_20261028.zip` in Zenodo. `Source_Data/Cylinder_Surface_Mapping/Cylinder_Surface_Mapping.xlsx` uses English column headings and retains the original 150 rows for each of the three cylinder radii (5, 10 and 20 mm). A CSV export preserves the same row and column order. These are the original figure-source values.
 
 ## Current structure generation
 

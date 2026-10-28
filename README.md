@@ -26,7 +26,7 @@ Run commands from the project root. `Code/`, `Input_Geometries/`, `Source_Data/`
 
 ## Prepare the Zenodo inputs automatically
 
-Download `PC_AEGG_Code_20261028.zip` and `PC_AEGG_Reviewer_Package_20261028.zip`. Extract the code archive into a project directory. Keep the review archive in that directory or its parent, then run:
+Download `PC_AEGG_Code_20261028.zip` and `PC_AEGG_Review_Inputs_20261028.zip`. Extract the code archive into a project directory. Keep the input archive in that directory or its parent, then run:
 
 ```sh
 python Code/Analysis/prepare_review_inputs.py
@@ -36,7 +36,7 @@ The script verifies the archive and extracts only its `Source_Data/` and `Micro_
 
 ## Review package and archived calculations
 
-`PC_AEGG_Reviewer_Package_20261028.zip` contains the code snapshot at commit `206b527387ecc851bb60fcd1e25fb989cad134ac` and the saved inputs needed by these commands:
+`PC_AEGG_Review_Inputs_20261028.zip` contains the saved inputs needed by these commands. The current code is supplied separately in `PC_AEGG_Code_20261028.zip`:
 
 ```sh
 python -m unittest discover -s Code/Tests -p "test_*.py"

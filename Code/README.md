@@ -11,7 +11,7 @@ python -m pip install -r Code/requirements-tested.txt
 python Code/Analysis/prepare_review_inputs.py
 ```
 
-For input preparation, keep `PC_AEGG_Reviewer_Package_20261028.zip` in the project root or its parent directory. The command verifies the archive and each selected input, then extracts only `Source_Data/` and `Micro_CT/`. It preserves the current code. The case configurations use project-relative geometry and output paths, so no author-directory edits are needed.
+For input preparation, keep `PC_AEGG_Review_Inputs_20261028.zip` in the project root or its parent directory. The command verifies the archive and each selected input, then extracts only `Source_Data/` and `Micro_CT/`. It preserves the current code. The case configurations use project-relative geometry and output paths, so no author-directory edits are needed.
 
 ## Statistics from archived results
 
@@ -107,7 +107,7 @@ python -m unittest discover -s Code/Tests -p "test_generation_entrypoint.py"
 python Code/Analysis/recompute_microct_metrics.py --ct-root Micro_CT --out ReviewChecks/microct
 ```
 
-The command reads five samples' saved native segmentations, ROI masks, aligned comparison arrays and component tables. It calculates solid Dice and both porosity definitions, and checks voxel/volume totals from the component tables. Its output is `microct_recomputed_metrics.json`. The review-input archive supplies the selected inputs; the complete CT archives retain the models and scans. TXM files are not required by this command.
+The command reads five samples' saved native segmentations, ROI masks, aligned comparison arrays and component tables. It calculates solid Dice and both porosity definitions, and checks voxel/volume totals from the component tables. Its output is `microct_recomputed_metrics.json`. The input archive supplies the selected inputs; the complete CT archives retain the models and scans. TXM files are not required by this command.
 
 ## Benchmark inputs
 

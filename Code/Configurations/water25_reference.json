@@ -1,7 +1,7 @@
 {
-  "input_stl": "E:\\第二篇文章\\PC-AEGG_Submission_Package\\PC-AEGG_Submission_Package\\Input_Geometries\\长方体.stl",
+  "input_stl": "Input_Geometries/长方体.stl",
   "target_height_mm": 25.0,
-  "output_dir": "E:\\第二篇文章\\PC-AEGG_Submission_Package\\_rebuild_stage_20261010\\representative_seed42_20261011_074511",
+  "output_dir": "NewRuns/water25",
   "build_mode": "dynamic",
   "internal_matched_random_position": false,
   "internal_matched_random_node_budget": 0,

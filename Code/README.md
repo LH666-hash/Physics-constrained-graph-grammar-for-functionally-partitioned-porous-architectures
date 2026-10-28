@@ -1,107 +1,114 @@
-# PC-AEGG 代码使用说明
+# PC-AEGG code guide
 
-本目录提供 PC-AEGG 的核心实现、案例配置、统计复算和分析程序。代码通过 GitHub 私有仓库管理，配套研究数据保存在 Zenodo 私有草稿中，并通过作者提供的只读链接供审稿核查。审稿核查包记录其对应的代码提交号。项目概览见[项目说明](../README.md)。以下命令在项目根目录执行。
+We provide the generation implementation, case configurations and saved-result analyses used with our study. The code repository and Zenodo draft remain private during peer review. Our [project README](../README.md) and Zenodo `README_DATA.md` describe access and the data layout. Run the commands below from the project root.
 
-## 环境与依赖
+## Environment and saved inputs
 
-`requirements-tested.txt` 记录 Python 3.11.5 下用于配置和入口回归检查的依赖版本；`requirements.txt` 列出当前实现使用的依赖包。
+Use Python 3.11. `requirements-tested.txt` records the dependency versions checked with Python 3.11.5. `requirements.txt` lists the packages used by the implementation.
 
 ```sh
 python -m pip install -r Code/requirements-tested.txt
+python Code/Analysis/prepare_review_inputs.py
 ```
 
-## 归档统计复算
+For input preparation, keep `PC_AEGG_Reviewer_Package_20261028.zip` in the project root or its parent directory. The command verifies the archive and each selected input, then extracts only `Source_Data/` and `Micro_CT/`. It preserves the current code. The case configurations use project-relative geometry and output paths, so no author-directory edits are needed.
+
+## Statistics from archived results
 
 ```sh
-python Code/Analysis/recompute_archived_results.py --out ReproductionResults
+python Code/Analysis/recompute_archived_results.py --out ReviewChecks/archived_statistics
 ```
 
-该程序读取四组、每组五个种子的共 20 份装配后压力剖面，以及 `Source_Data/ICP/` 中的工作簿，计算逐结构最小压力余量、组均值、样本标准差、稀释校正后的浓度和相应浓度比例。输入为归档剖面及实验读数，结构生成和从几何计算压力由生成程序执行。
+The command reads 20 post-assembly pressure profiles, representing four groups of five seeds, and two workbooks in `Source_Data/ICP/`. It calculates per-structure minimum pressure margins, group means, sample standard deviations, dilution-corrected concentrations and concentration ratios. It writes `recomputed_results.json` in the selected output directory and updates that JSON if it already exists. The three instrument readings for each solution are technical repeats. The La endpoint is a final-to-initial concentration ratio.
 
-结果写入 `--out` 指定目录中的 `recomputed_results.json`；已有同名文件时更新该 JSON。三个 ICP 读数为同一样品的技术重复。La 指标采用终浓度与初浓度之比，浓度比例与物质量平衡分别解释。
+These calculations use saved profiles and measured readings. Geometry generation and pressure evaluation from geometry are separate operations.
 
-## 案例配置与生成入口
+## Case entry points
 
 ```sh
 python Code/Analysis/generate_case.py --case water25 --out NewRuns/water25 --dry-run
+python Code/Analysis/generate_case.py --case water35 --out NewRuns/water35 --dry-run
+python Code/Analysis/generate_case.py --case organic22p5 --out NewRuns/organic22p5 --dry-run
 ```
 
-`--dry-run` 显示实际命令，移除后开始计算。三个案例读取相应的 `Code/Configurations/*_reference.json`：
+`--dry-run` displays the command without starting generation. Removing that flag starts a new calculation.
 
-| case | 流体 | 目标高度（mm） | 随机种子 | 压力切片数 |
-| --- | --- | --- | --- | --- |
-| `water25` | 水相 | 25 | 42 | 25 |
-| `water35` | 水相 | 35 | 101 | 35 |
-| `organic22p5` | 石油醚 | 22.5 | 42 | 23 |
+| Case | Fluid | Height (mm) | Seed | Pressure slices |
+| --- | --- | ---: | ---: | ---: |
+| `water25` | Water | 25 | 42 | 25 |
+| `water35` | Water | 35 | 101 | 35 |
+| `organic22p5` | Petroleum ether | 22.5 | 42 | 23 |
 
-压力切片标称厚度为 1 mm，22.5 mm 案例的最后一个切片厚 0.5 mm。三个参考配置的内部初始骨架均为 20 层；骨架层数与压力切片数是不同参数。
+Pressure slices have a nominal thickness of 1 mm; the final slice is 0.5 mm thick for the 22.5 mm case. All three reference configurations use 20 initial skeleton layers. Skeleton layers and pressure slices are separate parameters.
 
-入口显式设置流体物性、名义杆径、内部骨架层数、随机种子、压力切片和安全储备。输入有效且输出路径位于归档 `Source_Data/` 之外时，入口创建新目录，再启动计算；已有输出目录会被拒绝。直接无参数运行核心主程序时，程序提示使用案例入口。
+The entry point sets the fluid properties, nominal diameters, skeleton layers, seed, pressure grid and safety reserves explicitly. After checking the input geometry, it creates a fresh output directory outside archived `Source_Data/`, then starts the calculation. Existing output directories are rejected. Running the core program without arguments directs the reader to the case entry point.
 
-### 输入几何
+### Geometry inputs
 
-| case | 默认输入 |
+| Case | Default geometry |
 | --- | --- |
 | `water25` | [Input_Geometries/长方体.stl](../Input_Geometries/长方体.stl) |
 | `water35` | [Input_Geometries/box_10x10x35mm.stl](../Input_Geometries/box_10x10x35mm.stl) |
 | `organic22p5` | [Input_Geometries/box_10x10x22.5mm.stl](../Input_Geometries/box_10x10x22.5mm.stl) |
 
-`--input` 可指定其他输入。参考 JSON 中的 `input_stl` 和 `output_dir` 保留原运行位置；生成入口采用上表中的包内输入，并以 `--out` 设置实际输出目录。
+Use `--input` to select another geometry and `--out` to choose its output directory. `input_stl` and `output_dir` in the reference JSON files are project-relative. The entry point resolves the default input within the supplied project.
 
-35 mm 和石油醚盒体输入由保存的尺寸与载体网格记录重建，来源和校验值见 [generated_input_geometries.json](Configurations/generated_input_geometries.json)。石油醚输入为 10 × 10 × 22.5 mm、5000 个三角面；35 mm 输入为 10 × 10 × 35 mm、12 个三角面。两份输入均已随包提供。
+The 35 mm and petroleum-ether boxes were reconstructed from saved dimensions and carrier-mesh records. [generated_input_geometries.json](Configurations/generated_input_geometries.json) records their provenance and checksums. The petroleum-ether input is 10 × 10 × 22.5 mm with 5,000 triangles; the 35 mm input is 10 × 10 × 35 mm with 12 triangles. Both files are supplied.
 
-### 有机相轮廓修复预算
+### Organic-phase contour-repair budget
 
-有机相启动器检查实际载体为 5000 个三角面，并将全局轮廓修复的请求参数设为 256。每次修复调用的有效外层轮次预算为 `max(256, 512, 8 * N0)`，其中 `N0` 是该次调用开始时完整轮廓中的半径超限孔数。无超限孔、候选耗尽或有效预算用尽时停止。外层轮次、候选尝试数和成功修复数分别记录。
+The launcher checks that the carrier has 5,000 triangles and sets the requested global-contour repair parameter to 256. The effective outer-iteration budget for each repair call is `max(256, 512, 8 * N0)`, where `N0` is the initial number of oversized complete pores in that call. The call stops when no oversized pore remains, candidates are exhausted, or the effective budget is reached. Outer iterations, candidate attempts and accepted repairs are recorded separately.
 
-## 版本、规则与归档记录
+## Versions and production rules
 
-生成入口使用随包提供的当前实现，其源码版本与归档生成记录中的版本不同。归档记录中的 `core_code_sha256` 标识生成时的源码，当前仓库文件的校验值见根目录 `CODE_MANIFEST.csv`。
+Generation uses the current supplied implementation. Historical generated structures retain their own configurations and source fingerprints; these identify a different source version. Current source checksums are recorded in the root `CODE_MANIFEST.csv`.
 
-[production_code_map.csv](Configurations/production_code_map.csv) 列出补充表 S1–S3 的规则与当前实现函数的对应关系。[recorded_execution_evidence.json](Configurations/recorded_execution_evidence.json) 保留归档运行事件、来源路径及校验信息。历史记录中的绝对路径用于来源追溯，实际入口按当前项目目录解析输入。
+[production_code_map.csv](Configurations/production_code_map.csv) links Supplementary Tables S1–S3 to implementation functions. [recorded_execution_evidence.json](Configurations/recorded_execution_evidence.json) retains historical execution events and their source checksums. Absolute paths inside historical records describe their original provenance; active entry points resolve inputs within the current project.
 
-## 配对分析与缓存
+The five sensitivity CSV files preserve the archived carrier/patch parameter study. Their `target_faces` and `actual_faces` columns distinguish requested and achieved mesh counts. `max_faces_per_patch` controls initial patch growth; later merging of small fragments can exceed that value. These records describe geometric preprocessing, rather than 108 complete functional-generation runs. A dedicated driver that recreates the complete archived 108-combination study is not included.
 
-`Analysis/saved_configuration.py` 在配置恢复时同步流体物性、高度、层厚及派生量。终态验收依据实际高度网格确定预期压力切片数。
+The original Figure 3g workbook and CSV are in `PC_AEGG_Figure3g_Source_Data_20261028.zip`. The accompanying data README defines the recorded Error field and the relative percentage difference calculated from the original radii.
 
-配对缓存核对节点、连边、表面与运行配置、输入几何和相关源码，同时核对输出 STL、节点、连边及压力表的校验值。校验不匹配时重新计算相应配对结果。配对与重建脚本的输出范围见下表。
+## Paired analyses and caching
 
-## 维护脚本的输出范围
+`Analysis/saved_configuration.py` restores fluid properties, height, slice thickness and derived settings together. Terminal pressure acceptance derives its expected slice count from the actual height grid.
 
-| 脚本 | 用途与输出 |
+The pairing cache checks nodes, edges, surface/run configurations, input geometry and related source files. It also checks output STL, graph and pressure-table hashes. A mismatch triggers recalculation of the affected paired results.
+
+## Maintenance scripts
+
+| Script | Operation and output |
 | --- | --- |
-| `Analysis/Rebuild_All_Current.ps1` | 批量生成水相结构、验收后更新 `Source_Data/` 中的对应结果；暂存与备份目录位于项目上一级。`-SingleRepresentative` 选择代表结构流程。 |
-| `Analysis/pair_ablation_controls.py` | 重建配对分析，在 `Source_Data/Ablation_Analysis/` 中写入配对结果；替换已有结果时保留备份。 |
-| `Analysis/audit_final_package.py` | 生成结构索引，更新 `Source_Data/FINAL_DATA_INDEX.csv` 和 `Source_Data/FINAL_DATA_AUDIT.json`。 |
-| `Analysis/build_input_geometries.py` | 重建两份盒体输入及输入来源记录；同名输入已存在时停止。 |
-| `Analysis/plot_*.py`、`compose_figure2.py`、`export_*.py` | 根据各脚本设置导出分析图件或组合图，供图件维护使用。 |
+| `Analysis/Rebuild_All_Current.ps1` | Generates water cases and updates corresponding archived results after acceptance; staging and backups are placed above the project directory. `-SingleRepresentative` selects its representative-case workflow. |
+| `Analysis/pair_ablation_controls.py` | Rebuilds paired analyses under `Source_Data/Ablation_Analysis/`, retaining backups when existing results are replaced. |
+| `Analysis/audit_final_package.py` | Updates `Source_Data/FINAL_DATA_INDEX.csv` and `Source_Data/FINAL_DATA_AUDIT.json`. |
+| `Analysis/build_input_geometries.py` | Reconstructs the two box inputs and their provenance record; stops if those inputs already exist. |
+| `Analysis/plot_*.py`, `compose_figure2.py`, `export_*.py` | Export analysis figures or combined panels according to each script's settings. |
 
-结构索引记录 STL、SVG、图结构筛选和压力评价等项目。几何融合、水密性与制造验证分别由相应几何检查或实验评价。
+These maintenance operations write results. The documented saved-result checks above use archived inputs. Mesh union, watertightness and manufacturing validation have their own geometry checks or experiments.
 
-## 回归检查
-
-只检查入口与输出目录保护：
-
-```sh
-python -m unittest discover -s Code/Tests -p "test_generation_entrypoint.py"
-```
-
-审稿核查包已包含配置与入口检查所需的数据，解压后可运行：
+## Configuration and entry-point checks
 
 ```sh
 python -m unittest discover -s Code/Tests -p "test_*.py"
 ```
 
-检查包括 25 mm 水相、22.5 mm 有机相、35 mm 水相再返回 25 mm 水相的连续切换，以及保存剖面的压力网格验收。
+The checks cover sequential switching through 25 mm water, 22.5 mm petroleum ether, 35 mm water and back to 25 mm water, terminal acceptance of saved pressure grids, explicit case arguments, cache inputs and output-directory protection.
 
-## 微 CT 保存结果核对
+To run only the entry-point checks:
+
+```sh
+python -m unittest discover -s Code/Tests -p "test_generation_entrypoint.py"
+```
+
+## Saved micro-CT calculations
 
 ```sh
 python Code/Analysis/recompute_microct_metrics.py --ct-root Micro_CT --out ReviewChecks/microct
 ```
 
-该入口读取五组保存的原生分割、分析区掩膜、已配准比较数组和组分表，复算实体 Dice、两种孔隙率口径并核对体素及体积汇总。输出为 `microct_recomputed_metrics.json`。核查所用文件随审稿核查包提供；完整扫描和原生 STL 保存在完整 CT 压缩包中。
+The command reads five samples' saved native segmentations, ROI masks, aligned comparison arrays and component tables. It calculates solid Dice and both porosity definitions, and checks voxel/volume totals from the component tables. Its output is `microct_recomputed_metrics.json`. The review-input archive supplies the selected inputs; the complete CT archives retain the models and scans. TXM files are not required by this command.
 
-## 基准程序的包内输入
+## Benchmark inputs
 
-`Benchmark/run_strong_baseline_experiment.py` 从包内 `Source_Data/Benchmark_Analysis/内部/` 读取预设结构搜索表及 PC-AEGG 参考指标，使用同目录中的 `internal_pareto_pipeline.py` 和 `Core/capillary_viscous_filling.py`。其 `--out-dir` 是新计算结果的位置。`internal_pareto_pipeline.py` 的几何、液压模块和五个参考运行目录通过命令行显式指定。归档搜索表和自然表面比较结果可直接查看。
+`Benchmark/run_strong_baseline_experiment.py` reads archived search tables and PC-AEGG reference indicators from `Source_Data/Benchmark_Analysis/内部/`. It uses the supplied `internal_pareto_pipeline.py` and `Core/capillary_viscous_filling.py`; `--out-dir` selects the location for a new search. `internal_pareto_pipeline.py` accepts the geometry, hydraulic module and five reference-run directories through explicit command-line arguments. The archived search tables and natural-surface comparison can be inspected directly.

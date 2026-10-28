@@ -1,7 +1,7 @@
 {
-  "input_stl": "C:\\Users\\wbyan\\Documents\\Codex\\2026-10-16\\ni-s\\outputs\\height_limit_water\\inputs_surface5000_balanced\\box_10x10x22.5mm.stl",
+  "input_stl": "Input_Geometries/box_10x10x22.5mm.stl",
   "target_height_mm": 22.5,
-  "output_dir": "C:\\Users\\wbyan\\Documents\\Codex\\2026-10-16\\ni-s\\outputs\\height_limit_water\\low_gamma_balanced5000_repair256_layer20_density2p0\\LG_H22p5_Balanced_F5000_R256_L20_D2p0_seed42",
+  "output_dir": "NewRuns/organic22p5",
   "build_mode": "dynamic",
   "internal_matched_random_position": false,
   "internal_matched_random_node_budget": 0,

@@ -70,9 +70,15 @@ def square(rotation_degrees: float, integrated: bool = False) -> dict:
 
 
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--out', default='ReviewChecks/validation/square_pore_contour_repair_validation.json')
+    args = parser.parse_args()
     outcomes = [square(degrees, integrated) for integrated in (False, True)
                 for degrees in (0, 22.5)]
-    destination = (ROOT / 'Source_Data' / 'Validation_Standards' /
-                   'square_pore_contour_repair_validation.json')
+    destination = Path(args.out)
+    if not destination.is_absolute():
+        destination = ROOT / destination
+    destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(outcomes, indent=2) + '\n', encoding='utf-8')
     print(destination)

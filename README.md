@@ -71,3 +71,20 @@ Historical structures retain the configurations and source fingerprints of their
 `CODE_MANIFEST.csv` records source-file SHA-256 values. `Code/Configurations/production_code_map.csv` links 74 production-rule entries to their implementation functions. The same mapping is deposited separately in Zenodo as `PRODUCTION_CODE_MAP.csv`.
 
 Data-file versions and scope are documented in the Zenodo data guide. Numerical UV-vis spectral exports are outside the present deposit; the corresponding plotted figure files are supplied. All five CT samples' processed analysis arrays and models are supplied. The saved-result commands do not require TXM scan volumes.
+
+
+## Plotting and analytic validation
+
+After preparing the review inputs, run:
+
+```sh
+python Code/Analysis/plot_centrifugal_from_si.py
+python Code/Analysis/compose_figure2.py
+python Code/Tests/validate_contour_radius_repair.py
+```
+
+The centrifugal script reads the deposited workbook and pressure-boundary table and plots every recorded observation. It exports Figure3_hi.png/.pdf/.svg and English CSV tables. The historical script name is retained; the command reads data files directly.
+
+The Figure 2 command calculates panels d-e from the archived benchmark tables and places them in the supplied a-c layout. Figure2_abc.png and Figure2_layout.json are included in the prepared inputs. The output is Figure2_composed.png. The layout retains the published panels a-c; the d-e plots are recalculated from their tables.
+
+Plots are saved under ReviewChecks/figures/. Each plotting command accepts --out for a project-relative output destination. The analytic contour-repair command checks square pores at two orientations in standalone and integrated workflows, creates its output directory and saves ReviewChecks/validation/square_pore_contour_repair_validation.json. Its --out option selects another JSON path. These commands write separate outputs from the archived article figures.

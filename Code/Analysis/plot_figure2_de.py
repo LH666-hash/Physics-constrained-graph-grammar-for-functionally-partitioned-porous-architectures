@@ -12,7 +12,7 @@ from matplotlib.lines import Line2D
 PACKAGE = Path(__file__).resolve().parents[2]
 ROOT = PACKAGE / "Source_Data/Benchmark_Analysis"
 SURFACE = PACKAGE / "Source_Data/Ablation_Analysis/表面"
-OUT = PACKAGE / "Figures/Main_Figures"
+OUT = PACKAGE / "ReviewChecks/figures"
 BLUE, PURPLE, PINK = "#145D93", "#72538F", "#B85E78"
 FAMILIES = {
     "Graded BCC": ("#1B669D", "o"),
@@ -23,7 +23,11 @@ FAMILIES = {
 }
 
 
-def main():
+def main(out_dir=None):
+    output = Path(out_dir) if out_dir is not None else OUT
+    if not output.is_absolute():
+        output = PACKAGE / output
+    output.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.family": "Arial", "font.size": 9,
                          "axes.spines.top": False, "axes.spines.right": False,
                          "pdf.fonttype": 42, "svg.fonttype": "none"})
@@ -124,10 +128,13 @@ def main():
         ax.yaxis.label.set_size(7.5)
         ax.title.set_size(8.5)
     for ext in ("png", "pdf", "svg"):
-        fig.savefig(OUT / f"Figure2_de.{ext}",
+        fig.savefig(output / f"Figure2_de.{ext}",
                     dpi=350, facecolor="white")
     plt.close(fig)
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--out', default=str(OUT))
+    main(parser.parse_args().out)

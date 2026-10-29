@@ -112,3 +112,20 @@ The command reads five samples' saved native segmentations, ROI masks, aligned c
 ## Benchmark inputs
 
 `Benchmark/run_strong_baseline_experiment.py` reads archived search tables and PC-AEGG reference indicators from `Source_Data/Benchmark_Analysis/内部/`. It uses the supplied `internal_pareto_pipeline.py` and `Core/capillary_viscous_filling.py`; `--out-dir` selects the location for a new search. `internal_pareto_pipeline.py` accepts the geometry, hydraulic module and five reference-run directories through explicit command-line arguments. The archived search tables and natural-surface comparison can be inspected directly.
+
+
+## Plotting and analytic validation
+
+After preparing the review inputs, run:
+
+```sh
+python Code/Analysis/plot_centrifugal_from_si.py
+python Code/Analysis/compose_figure2.py
+python Code/Tests/validate_contour_radius_repair.py
+```
+
+The centrifugal script reads the deposited workbook and pressure-boundary table and plots every recorded observation. It exports Figure3_hi.png/.pdf/.svg and English CSV tables. The historical script name is retained; the command reads data files directly.
+
+The Figure 2 command calculates panels d-e from the archived benchmark tables and places them in the supplied a-c layout. Figure2_abc.png and Figure2_layout.json are included in the prepared inputs. The output is Figure2_composed.png. The layout retains the published panels a-c; the d-e plots are recalculated from their tables.
+
+Plots are saved under ReviewChecks/figures/. Each plotting command accepts --out for a project-relative output destination. The analytic contour-repair command checks square pores at two orientations in standalone and integrated workflows, creates its output directory and saves ReviewChecks/validation/square_pore_contour_repair_validation.json. Its --out option selects another JSON path. These commands write separate outputs from the archived article figures.

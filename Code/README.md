@@ -116,7 +116,7 @@ The command reads five samples' saved native segmentations, ROI masks, aligned c
 
 ## Plotting and analytic validation
 
-After preparing the review inputs, run:
+Keep PC_AEGG_Review_Inputs_20261028.zip and PC_AEGG_Plotting_Inputs_20261029.zip beside the project or in its parent, then run the preparation command. The plotting package supplies the additional source tables and layout assets. Run:
 
 ```sh
 python Code/Analysis/plot_centrifugal_from_si.py

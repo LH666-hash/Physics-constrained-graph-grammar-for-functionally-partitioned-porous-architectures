@@ -26,7 +26,7 @@ Run commands from the project root. `Code/`, `Input_Geometries/`, `Source_Data/`
 
 ## Prepare the Zenodo inputs automatically
 
-Download `PC_AEGG_Code_20261028.zip` and `PC_AEGG_Review_Inputs_20261028.zip`. Extract the code archive into a project directory. Keep the input archive in that directory or its parent, then run:
+Download `PC_AEGG_Code_20261028.zip`, `PC_AEGG_Review_Inputs_20261028.zip` and `PC_AEGG_Plotting_Inputs_20261029.zip`. Extract the code archive into a project directory. Keep both input archives in that directory or its parent, then run:
 
 ```sh
 python Code/Analysis/prepare_review_inputs.py
@@ -75,7 +75,7 @@ Data-file versions and scope are documented in the Zenodo data guide. Numerical 
 
 ## Plotting and analytic validation
 
-After preparing the review inputs, run:
+Keep PC_AEGG_Review_Inputs_20261028.zip and PC_AEGG_Plotting_Inputs_20261029.zip beside the project or in its parent, then run the preparation command. The plotting package supplies the additional source tables and layout assets. Run:
 
 ```sh
 python Code/Analysis/plot_centrifugal_from_si.py
